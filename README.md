@@ -73,5 +73,6 @@ Handled by Pandoc using built-in styles. The highlight style is matched to the s
 - Pandoc handles Markdown → HTML conversion
 - No LaTeX or TeX Live is required
 - Works on most Linux distributions (not distro-specific)
+- Images in the markdown are supported and embedded
 - Requires a graphical Chromium/Chrome installation, even in headless mode
 - Chromium profile and cache are isolated per run and cleaned up automatically — no leftover data in `~/.cache`
