@@ -98,6 +98,7 @@ def convert(md_path, pdf_path, theme="dark"):
             str(md_path),
             "-o", str(html_file),
             "--standalone",
+            "--embed-resources",
             "--css", str(css_file),
             f"--highlight-style={highlight}",
         ])
