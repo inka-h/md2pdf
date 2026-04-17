@@ -74,13 +74,21 @@ def run(cmd):
         print(result.stderr, file=sys.stderr)
         result.check_returncode()
 
-
+def validate_args(md_path, pdf_path):
+    if not md_path.suffix.lower() == ".md":
+        raise ValueError(f"Input file must be .md, got: '{md_path.name}'")
+    if not pdf_path.suffix.lower() == ".pdf":
+        raise ValueError(
+            f"Output file must be .pdf, got: '{pdf_path.name}'"
+        )
+    if not md_path.is_file():
+        raise FileNotFoundError(f"Input file not found: {md_path}")
+        
 def convert(md_path, pdf_path, theme="dark"):
     md_path = Path(md_path).resolve()
     pdf_path = Path(pdf_path).resolve()
 
-    if not md_path.is_file():
-        raise FileNotFoundError(f"Input file not found: {md_path}")
+    validate_args(md_path, pdf_path)
 
     css = DARK_CSS if theme == "dark" else LIGHT_CSS
     highlight = HIGHLIGHT_STYLES[theme]
@@ -95,13 +103,14 @@ def convert(md_path, pdf_path, theme="dark"):
 
         run([
             "pandoc",
-            str(md_path),
+            str(md_path), 
             "-o", str(html_file),
             "--standalone",
             "--embed-resources",
             "--css", str(css_file),
             f"--highlight-style={highlight}",
         ])
+
 
         run([
             chromium,
@@ -133,7 +142,11 @@ def main():
 
     try:
         convert(args.input, args.output, args.theme)
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+    except (
+        subprocess.CalledProcessError,
+        FileNotFoundError,
+        ValueError,
+    ) as e:
         print(f"❌ {e}", file=sys.stderr)
         sys.exit(1)
 
