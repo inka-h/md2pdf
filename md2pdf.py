@@ -83,6 +83,10 @@ def validate_args(md_path, pdf_path):
         )
     if not md_path.is_file():
         raise FileNotFoundError(f"Input file not found: {md_path}")
+    if pdf_path.exists():
+        response = input(f"'{pdf_path.name}' already exists. Overwrite? [y/N] ")
+        if response.lower() != "y":
+            raise SystemExit("Aborted.")
         
 def convert(md_path, pdf_path, theme="dark"):
     md_path = Path(md_path).resolve()
@@ -146,6 +150,7 @@ def main():
         subprocess.CalledProcessError,
         FileNotFoundError,
         ValueError,
+        SystemExit,
     ) as e:
         print(f"❌ {e}", file=sys.stderr)
         sys.exit(1)
